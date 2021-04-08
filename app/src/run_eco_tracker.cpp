@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 
     int f = 1;
     std::string img_file_name = path + "/img/" + cv::format("%04d", f) + ".jpg";
-    cv::Mat frame = cv::imread(img_file_name, CV_LOAD_IMAGE_UNCHANGED);
+    cv::Mat frame = cv::imread(img_file_name, cv::IMREAD_UNCHANGED);
     cv::Mat frameDraw;
     frame.copyTo(frameDraw);
     if (!frame.data) {
@@ -67,6 +67,8 @@ int main(int argc, char **argv) {
     ecotracker.init(frame, ecobbox, cfg_param);
     double total_cost_time = 0.0;
     int cnt = 0;
+    cv::namedWindow("EcoTracker", cv::WINDOW_NORMAL);
+
     // step 2.2 eco tracking update process
     while (frame.data) {
         frame.copyTo(frameDraw); 
@@ -75,23 +77,23 @@ int main(int argc, char **argv) {
         total_cost_time += eco_time_probe.ms_delay();
         cnt++;
         if (okeco) {
-            rectangle(frameDraw, ecobbox, Scalar(255, 0, 255), 2, 1); //blue
+            rectangle(frameDraw, ecobbox, Scalar(255, 0, 0), 2, 1); //blue
         } else {
             putText(frameDraw, "ECO tracking failure detected", cv::Point(100, 80), FONT_HERSHEY_SIMPLEX,
                     0.75, Scalar(255, 0, 255), 2);
         }
-        rectangle(frameDraw, bboxGroundtruth, Scalar(0, 0, 0), 2, 1);
+        rectangle(frameDraw, bboxGroundtruth, Scalar(0, 255, 255), 2, 1); //yellow
         imshow("EcoTracker", frameDraw);
 
         std::cout << "--bboxGroundtruth x: " << bboxGroundtruth.x << " y:" << bboxGroundtruth.y
         << " width: " << bboxGroundtruth.width << " height: " << bboxGroundtruth.height << std::endl;
         std::cout << "--ecobbox x: " << ecobbox.x << " y:" << ecobbox.y
         << " width: " << ecobbox.width << " height: " << ecobbox.height << std::endl;
-        waitKey(5);
+        cv::waitKey(1000);
         f++;
         readGroundTruthFromFile(groundtruth, bboxGroundtruth);
         img_file_name = path + "/img/" + cv::format("%04d", f) + ".jpg";
-        frame = cv::imread(img_file_name, CV_LOAD_IMAGE_UNCHANGED);
+        frame = cv::imread(img_file_name, cv::IMREAD_UNCHANGED);
         if (!frame.data) {
             break;
         }

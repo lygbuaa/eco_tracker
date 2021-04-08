@@ -14,6 +14,12 @@ include_directories(${EIGEN3_INCLUDE_DIR} ./
 					./app/inc/
 )
 
+option(USE_CNN "use cnn feature" OFF)
+if(USE_CNN)
+    add_definitions(-DUSE_CNN)
+endif()
+message("USE_CNN: ${USE_CNN}")
+
 find_package(OpenCV REQUIRED)
 add_executable(feature_extractor
     moduletest/feature_extractor_test.cpp

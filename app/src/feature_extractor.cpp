@@ -149,7 +149,7 @@ cv::Mat getSamplePatch(const cv::Mat im,
 
 	cv::Point pos2(pos.x - std::floor((sample_sz.width + 1) / 2),
 				   pos.y - std::floor((sample_sz.height + 1) / 2));
-	cv::Mat im_patch = subwindow(new_im, cv::Rect(pos2, sample_sz), IPL_BORDER_REPLICATE);
+	cv::Mat im_patch = subwindow(new_im, cv::Rect(pos2, sample_sz), cv::BORDER_REPLICATE);
 
 	cv::Mat resized_patch;
 	if (im_patch.cols == 0 || im_patch.rows == 0) {
